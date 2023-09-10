@@ -1,0 +1,10 @@
+-e .[homeassistant]
+pre-commit
+
+# QoL
+ipython
+rich
+
+# Testing
+pytest-cov
+coverage
