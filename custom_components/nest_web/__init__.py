@@ -4,7 +4,7 @@ Initialize the Nest Web integration
 :author: Doug Skrypa
 """
 
-from importlib.resources import files
+from pathlib import Path
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -28,7 +28,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     conf = hass.data.get(DATA_NEST_CONFIG, {})
 
     if not (config_path := conf.get('config_path')):
-        config_path = files('nest_web.config').joinpath('nest.cfg')
+        # Note: importlib.resources.files did not work for this, I assume due to the way HACS installs the integration
+        config_path = Path(__file__).resolve().parent.joinpath('config', 'nest.cfg')
         if not config_path.is_file():
             config_path = None
 
