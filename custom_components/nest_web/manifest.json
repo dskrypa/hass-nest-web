@@ -7,5 +7,5 @@
   "requirements": ["nest-client @ git+https://github.com/dskrypa/nest-client"],
   "codeowners": [],
   "iot_class": "cloud_polling",
-  "version": "1.1.0"
+  "version": "1.1.1"
 }

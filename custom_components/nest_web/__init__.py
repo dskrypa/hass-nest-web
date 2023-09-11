@@ -4,6 +4,8 @@ Initialize the Nest Web integration
 :author: Doug Skrypa
 """
 
+from importlib.resources import files
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
@@ -24,7 +26,13 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Nest from legacy config entry."""
     conf = hass.data.get(DATA_NEST_CONFIG, {})
-    client = NestWebClient(conf.get('config_path'), overrides=conf.get('overrides'))
+
+    if not (config_path := conf.get('config_path')):
+        config_path = files('nest_web.config').joinpath('nest.cfg')
+        if not config_path.is_file():
+            config_path = None
+
+    client = NestWebClient(config_path, overrides=conf.get('overrides'))
     hass.data[DOMAIN] = nest_web_device = NestWebDevice(hass, conf, client)
     success = await nest_web_device.initialize()
     if not success:
