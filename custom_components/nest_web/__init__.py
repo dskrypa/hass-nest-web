@@ -30,7 +30,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if not (config_path := conf.get('config_path')):
         # Note: importlib.resources.files did not work for this, I assume due to the way HACS installs the integration
         config_path = Path(__file__).resolve().parent.joinpath('config', 'nest.cfg')
-        if not config_path.is_file():
+        if config_path.is_file():
+            config_path = config_path.as_posix()
+        else:
             config_path = None
 
     client = NestWebClient(config_path, overrides=conf.get('overrides'))
